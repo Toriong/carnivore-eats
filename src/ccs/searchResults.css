@@ -1,0 +1,83 @@
+.results-container-restaurants {
+  width: 100px;
+  height: 100px;
+  border: solid 2px black;
+  background-color: magenta;
+}
+
+.results-container-meat-item {
+  border: solid 0.8px gray;
+  background-color: blue;
+}
+
+.results-container-addOn-item {
+  border: solid 0.8px pink;
+  background-color: blanchedalmond;
+}
+
+.results-container {
+  width: 100%;
+  border: magenta 0.8px solid;
+  height: 100px;
+  /* position: absolute; */
+}
+
+.results-container > div {
+  display: inline-block;
+  border-spacing: 0px;
+  /* margin: 0px 0px 0px 2px; */
+}
+
+.search-symbol-container {
+  border: solid 0.8px blueviolet;
+  width: 15%;
+  height: 100px;
+  position: relative;
+  float: left;
+}
+
+.search-symbol-container i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5px;
+}
+
+.search-meat-info-container {
+  width: 59%;
+  height: 100px;
+  border: solid 0.8px green;
+}
+
+.isOrderThisItemOrGoToRestaurantModal-order-button {
+  margin-bottom: 20px;
+}
+
+.right-side-arrow {
+  width: 25%;
+  height: 100px;
+  border: solid 0.8px black;
+  float: right;
+}
+
+.isOrderThisItemOrGoToRestaurantModal-modal {
+  height: 400px;
+  width: 600px;
+  border: lightgray 0.8px solid;
+  background-color: white;
+  position: absolute;
+  /* z-index: 1000; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10000;
+  overflow-y: scroll;
+}
+
+.isOrderThisItemOrGoToRestaurantModal-order-button {
+  border: solid 2px black;
+  width: 100px;
+  height: 100px;
+}
