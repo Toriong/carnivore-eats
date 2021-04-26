@@ -12,30 +12,48 @@ import { BrowserRouter } from 'react-router-dom';
 
 
 const NavBar = () => {
-    const { confirmedPriceTotal, confirmedQuantityOfOrder, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, openResultsContainer, selectedMeatItemToOrderModal, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar } = useContext(MeatInfoContext);
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isSideNavBarOpen, setIsSideNavBarOpen] = useState(false);
-    const [confirmedQuantity,] = confirmedQuantityOfOrder;
-    const [changeQuantityOfOrder, setChangeQuantityOfOrder] = useState(confirmedQuantity)
+    const { confirmedPriceTotal, quantityOfOrdersConfirmed, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, openResultsContainer, selectedMeatItemToOrderModal, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar, ordersInfoConfirmed, totalOfCart, ordersSumQuantityTotal } = useContext(MeatInfoContext);
+
+    const [sumQuantityTotalOfOrders, setSumQuantityTotalOfOrders] = ordersSumQuantityTotal;
+    const [cartTotal, setCartTotal] = totalOfCart;
+    const [confirmedOrdersInfo, setConfirmedOrdersInfo] = ordersInfoConfirmed;
+    const [confirmedQuantityOfOrders, setConfirmedQuantityOfOrders] = quantityOfOrdersConfirmed;
     const [confirmedOrderPrice,] = confirmedPriceTotal;
     const [nameOfOrder, setNameOfOrder] = confirmedNameOfOrder;
     const [nameOfRestaurant, setNameOfRestaurant] = confirmedNameOfRestaurantOfOrder;
-    const [userWantsToOrderMeatFromSearchBar, setUserWantsToOrderMeatFromSearchBar] = isMeatItemModalOpenFromSearchBar;
+    const [openMeatItemModalFromSearchBar, setOpenMeatItemModalFromSearchBar] = isMeatItemModalOpenFromSearchBar;
     const [selectedMeatItemInfoFromSearchBar, setSelectedMeatItemInfoFromSeachBar] = meatItemInfoSelectedFromSearchBar;
     const [isSearchResultsOpen, setIsSearchResultsOpen] = openResultsContainer;
     // const [openMeatItemModal, setOpenMeatItemModal] = openMeatItemModalCondition
     const [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen] = isGoToResaurantMenuOrOrderMeatItemModalOpen;
     const [meatItemToOrderModal, setMeatItemToOrderModal] = selectedMeatItemToOrderModal;
+
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isSideNavBarOpen, setIsSideNavBarOpen] = useState(false);
+    const [isMeatItemModalOpenFromCart, setIsMeatItemModalOpenFromCart] = useState(false);
+    const [propsForMeatItemModalOpenFromCart, setPropsForMeatItemModalOpenFromCart] = useState('');
+
     const [searchInput, setSearchInput] = useState("");
+
     const openSearchResultsContainer = (event) => {
         setIsSearchResultsOpen(true);
         setSearchInput(event.target.value);
     }
 
-    const editQuantityNum = (event) => {
-        let value = event.target.value;
-        setChangeQuantityOfOrder(value);
+    const openMeatItemModalFromCart = (meatItemInfo, allAddOns, restaurantName, setIsMeatItemModalOpen, id) => {
+        setPropsForMeatItemModalOpenFromCart({
+            meatItemInfo: meatItemInfo,
+            addOns: allAddOns,
+            restaurantName: restaurantName,
+            setIsMeatItemModalOpen: setIsMeatItemModalOpen,
+            id: id
+        });
+        setIsMeatItemModalOpenFromCart(true);
     }
+
+    useEffect(() => {
+        console.log(confirmedOrdersInfo);
+    }, [confirmedOrdersInfo]);
 
     return <>
         {isSideNavBarOpen ?
@@ -130,52 +148,65 @@ const NavBar = () => {
                         <div id="cart-text">
                             Cart:
                     </div>
-                        {confirmedQuantity > 0 ?
-                            <div id="number-of-items">
-                                {confirmedQuantity}
-                            </div>
-                            :
-                            <div id="number-of-items">
-                                0
+                        <div id="number-of-items">
+                            {sumQuantityTotalOfOrders}
                         </div>
-                        }
                     </div>
+                    {/* cart modal */}
                     {isCartOpen ?
-                        <div className="cart-modal">
-                            <div className="your-order-container">
-                                <h1>Your Order</h1>
-                            </div>
-                            <div className="confirmed-restaurant-of-order-container">
-                                <h6>From {nameOfRestaurant}</h6>
-                            </div>
-                            <div className="order-name-edit-button-quantity-container">
-                                <div className="edit-button">
-                                    EDIT
-                            </div>
-                                <div className="quantity-container">
-                                    {confirmedQuantity}
+                        <>
+                            <div className="cart-modal">
+                                <div className="your-order-container">
+                                    <h1>{confirmedOrdersInfo[0].restaurantName}</h1>
                                 </div>
-                                <div className="name-of-order">
-                                    <h4>{nameOfOrder}</h4>
-                                </div>
-                                <div className="price-of-item">
-                                    <p>${confirmedOrderPrice}</p>
-                                </div>
-                            </div>
-                            <div className="proceed-to-checkout-button-container">
-                                <div className="checkout-button">
-                                    <div className="quantity-confirmed">
-                                        <p>{confirmedQuantity}</p>
+                                {confirmedOrdersInfo.map((order) => {
+                                    return <>
+                                        <div className="order-name-edit-button-quantity-container" onClick={() => { openMeatItemModalFromCart(order.infoOfMainMeatItem, order.allAddOns, order.restaurantName, setIsMeatItemModalOpenFromCart, order.id) }}>
+                                            <div className="edit-button">
+                                                EDIT
                                     </div>
-                                    <div className="checkout-button-text">
-                                        Proceed to Checkout
-                                </div>
-                                    <div className="total-price">
-                                        <p>${confirmedOrderPrice}</p>
+                                            <div className="quantity-container">
+                                                {order.orderQuantity} X
+                                            </div>
+                                            <div className="name-of-order">
+                                                <h4>{order.infoOfMainMeatItem.name}</h4>
+                                            </div>
+                                            <div className="price-of-item">
+                                                <p>${order.totalOrderPrice}</p>
+                                            </div>
+                                            {order.totalConfirmedAddOnPrice === "0.00" ?
+                                                null : <div className="addOn-container">
+                                                    <div className="addOn-title">
+                                                        <h5>ADD-ONS</h5>
+                                                    </div>
+                                                    <div>
+                                                        <p>
+                                                            ${order.totalConfirmedAddOnPrice}
+                                                        </p>
+                                                    </div>
+                                                    {/* addOnsInfo stores bunch objects in an array */}
+                                                    {order.selectedAddOnsInfo.map((addOn) => <div className="addOn-names">
+                                                        <div>
+                                                            <h6>{addOn.name}</h6>
+                                                        </div>
+                                                    </div>
+                                                    )}
+                                                </div>}
+                                        </div>
+                                    </>
+                                })}
+                                <div className="proceed-to-checkout-button-container">
+                                    <div className="checkout-button">
+                                        <div className="checkout-button-text">
+                                            Go to checkout
+                                                </div>
+                                        <div className="total-price">
+                                            <p>${cartTotal.toFixed(2)}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
                         :
                         null
                     }
@@ -183,13 +214,14 @@ const NavBar = () => {
             </div>
         </div>
 
-        {userWantsToOrderMeatFromSearchBar ?
+        {openMeatItemModalFromSearchBar ?
             <>
-                <div className="blocker" onClick={() => { setUserWantsToOrderMeatFromSearchBar(false) }} />
+                <div className="blocker" onClick={() => { setOpenMeatItemModalFromSearchBar(false) }} />
                 <SelectedMeatItemViewerToOrderModal
                     meatItemInfo={selectedMeatItemInfoFromSearchBar.meatItemInfo}
                     addOns={selectedMeatItemInfoFromSearchBar.restaurantInfo.add_ons}
                     restaurantName={selectedMeatItemInfoFromSearchBar.restaurantInfo.domDisplayName}
+                    setIsMeatItemModalOpen={setOpenMeatItemModalFromSearchBar}
                 />
             </>
             :
@@ -197,6 +229,20 @@ const NavBar = () => {
         }
         {isOrderMeatItemOrGoToRestaurantMenuModalOpen ?
             <OrderMeatOrGoToResModal />
+            :
+            null
+        }
+        {/* create a state value here, that, if true, will execute SelectedMeatItemViewerToOrderModal with all of the values from the order that the user selected from their cart passed in as the arguments for the props   */}
+        {isMeatItemModalOpenFromCart ?
+            <>
+                <div className="blocker" onClick={() => { setIsMeatItemModalOpenFromCart(false) }} />
+                <SelectedMeatItemViewerToOrderModal
+                    meatItemInfo={propsForMeatItemModalOpenFromCart.meatItemInfo}
+                    addOns={propsForMeatItemModalOpenFromCart.addOns}
+                    restaurantName={propsForMeatItemModalOpenFromCart.restaurantName}
+                    setIsMeatItemModalOpen={setIsMeatItemModalOpenFromCart}
+                />
+            </>
             :
             null
         }

@@ -32,7 +32,12 @@ const MeatItemDisplayOnMenu = ({ meatItemInfo, addOns, restaurantName, isMainMea
             </div>
         </div> : null}
         {/* meat item modal */}
-        <SelectedMeatItemViewerToOrderModal meatItemInfo={meatItemInfo} restaurantName={restaurantName} addOns={addOns} />
+        <SelectedMeatItemViewerToOrderModal
+            meatItemInfo={meatItemInfo}
+            restaurantName={restaurantName}
+            addOns={addOns}
+            setIsMeatItemModalOpen={setIsMeatItemModalOpen}
+        />
     </>
         :
         meatItemModalWasOpenedFromSearchContainer ? null :

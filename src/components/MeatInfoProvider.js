@@ -8,7 +8,7 @@ export const MeatInfoProvider = (props) => {
     const [selectedRestaurants, setSelectedRestaurants] = useState('')
     const [confirmedOrderPriceTotal, setConfirmedOrderPriceTotal] = useState('');
     const [nameOfOrder, setNameOfOrder] = useState('');
-    let [confirmedCount, setConfirmedCount] = useState(0);
+    let [confirmedQuantityOfOrders, setConfirmedQuantityOfOrders] = useState(0);
     const [isSearchResultsContainerOpen, setIsSearchResultsContainerOpen] = useState(false)
     const [userWantsToOrderMeatFromSearchBar, setUserWantsToOrderMeatFromSearchBar] = useState(false);
     const [meatItemToOrderModal, setMeatItemToOrderModal] = useState('');
@@ -18,11 +18,17 @@ export const MeatInfoProvider = (props) => {
     const [selectedMeatItemInfoFromSearchBar, setSelectedMeatItemInfoFromSeachBar] = useState('');
     const [selectedAddOnPrices, setSelectedAddOnPrices] = useState([0]);
     const [namesOfTheSelectedAddOns, setNamesOfTheSelectedAddOns] = useState([])
+    const [confirmedOrdersInfo, setConfirmedOrdersInfo] = useState([]);
+    const [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder] = useState([]);
+    const [totalAddOnPrice, setTotalAddOnPrice] = useState(0);
+    const [cartTotal, setCartTotal] = useState('');
+    const [sumQuantityTotalOfOrders, setSumQuantityTotalOfOrders] = useState(0);
+
 
 
     return <MeatInfoContext.Provider value={{
         confirmedPriceTotal: [confirmedOrderPriceTotal, setConfirmedOrderPriceTotal],
-        confirmedQuantityOfOrder: [confirmedCount, setConfirmedCount],
+        quantityOfOrdersConfirmed: [confirmedQuantityOfOrders, setConfirmedQuantityOfOrders],
         confirmedNameOfRestaurantOfOrder: [selectedRestaurants, setSelectedRestaurants],
         confirmedNameOfOrder: [nameOfOrder, setNameOfOrder],
         openResultsContainer: [isSearchResultsContainerOpen, setIsSearchResultsContainerOpen],
@@ -33,7 +39,12 @@ export const MeatInfoProvider = (props) => {
         isGoToResaurantMenuOrOrderMeatItemModalOpen: [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen],
         meatItemInfoSelectedFromSearchBar: [selectedMeatItemInfoFromSearchBar, setSelectedMeatItemInfoFromSeachBar],
         listOfSelectedAddOnPrices: [selectedAddOnPrices, setSelectedAddOnPrices],
-        listOfSelectedAddOnNames: [namesOfTheSelectedAddOns, setNamesOfTheSelectedAddOns]
+        totalPriceOfAddOn: [totalAddOnPrice, setTotalAddOnPrice],
+        listOfSelectedAddOnNames: [namesOfTheSelectedAddOns, setNamesOfTheSelectedAddOns],
+        ordersInfoConfirmed: [confirmedOrdersInfo, setConfirmedOrdersInfo],
+        infoOfSelectedAddOnsToOrder: [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder],
+        totalOfCart: [cartTotal, setCartTotal],
+        ordersSumQuantityTotal: [sumQuantityTotalOfOrders, setSumQuantityTotalOfOrders]
     }}>
         {props.children}
     </MeatInfoContext.Provider>

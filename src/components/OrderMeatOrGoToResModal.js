@@ -20,6 +20,7 @@ const OrderMeatOrGoToResModal = () => {
             <h4>Order the {selectedMeatItemInfoFromSearchBar.meatItemInfo.name} from {selectedMeatItemInfoFromSearchBar.restaurantInfo.domDisplayName} or view all available meats from {selectedMeatItemInfoFromSearchBar.restaurantInfo.domDisplayName} ?</h4>
         </div>
         <div className="isOrderThisItemOrGoToRestaurantModal-order-button" onClick={() => {
+            // this function will open the meat item modal that is located in the NavBar
             setUserWantsToOrderMeatFromSearchBar(true);
             setIsSearchResultsContainerOpen(false);
             setIsOrderMeatItemOrGoToRestaurantMenuModalOpen(false);
