@@ -37,6 +37,7 @@ const MeatItemDisplayOnMenu = ({ meatItemInfo, addOns, restaurantName, isMainMea
             restaurantName={restaurantName}
             addOns={addOns}
             setIsMeatItemModalOpen={setIsMeatItemModalOpen}
+            confirmedAddOnsInfoInCart={[]}
         />
     </>
         :

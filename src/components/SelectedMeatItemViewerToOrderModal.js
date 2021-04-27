@@ -2,9 +2,10 @@ import React, { useContext, useState, useEffect } from 'react'
 import { MeatInfoContext } from './MeatInfoProvider';
 import AddOnItem from './AddOnItem'
 
-const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addOns, setIsMeatItemModalOpen }) => {
-    const { confirmedPriceTotal, confirmedQuantityOfOrder, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, listOfSelectedAddOnPrices, ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalPriceOfAddOn, isMeatItemModalOpenFromSearchBar, totalOfCart, ordersSumQuantityTotal } = useContext(MeatInfoContext);
+const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addOns, setIsMeatItemModalOpen, orderFromCart, confirmedAddOnsInfoInCart }) => {
+    const { confirmedPriceTotal, confirmedQuantityOfOrder, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, listOfSelectedAddOnPrices, ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalPriceOfAddOn, isMeatItemModalOpenFromSearchBar, totalOfCart, ordersSumQuantityTotal, editCartOrder } = useContext(MeatInfoContext);
 
+    const [makesEditsToCartOrder, setMakesEditsToCartOrder] = editCartOrder;
     const [userWantsToOrderMeatFromSearchBar, setUserWantsToOrderMeatFromSearchBar] = isMeatItemModalOpenFromSearchBar;
     const [sumQuantityTotalOfOrders, setSumQuantityTotalOfOrders] = ordersSumQuantityTotal
     const [cartTotal, setCartTotal] = totalOfCart;
@@ -53,7 +54,31 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
         setWasOrderButtonPressed(true);
     };
 
+    // create context state value that if true, then invoked the following code
     useEffect(() => {
+        if (makesEditsToCartOrder) {
+            setMainMeatCount(orderFromCart.orderQuantity);
+            setOrderTotal((orderFromCart.orderQuantity * meatItemInfo.price).toFixed(2))
+            if (orderFromCart.selectedAddOnsInfo.length > 0) {
+                setIsAddOnMenuOpen(true)
+            }
+        }
+        // if the length of the array in selectedAddOnInfo is greater than 0, then set isAddOnMenuOpen to true
+        setMakesEditsToCartOrder(false)
+    }, [makesEditsToCartOrder]);
+
+    // useEffect(() => {
+    //     if (orderFromCart.selectedAddOnsInfo.length > 0) {
+    //         setIsAddOnMenuOpen(true)
+    //     }
+    // }, [orderFromCart]);
+
+    // useEffect(() => {
+    //     console.log(selectedAddOnsInfo)
+    // }, [selectedAddOnsInfo]);
+
+    useEffect(() => {
+        // console.log(selectedAddOnsInfo);
         if (wasOrderButtonPressed) {
             setSumQuantityTotalOfOrders(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((priceN, priceNMinus1) => priceN + priceNMinus1));
             setCartTotal(confirmedOrdersInfo.map((order) => parseFloat(order.totalOrderPrice)).reduce((price1, priceN) => (price1 + priceN)));
@@ -65,8 +90,8 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
         }
         // setConfirmedAddOnTotalPrice(totalAddOnPrice);
         // setConfirmedAddOnsInfoToOrder(selectedAddOnInfoToOrder);
-        console.log(addOns)
-    }, [totalAddOnPrice, confirmedAddOnTotalPrice, selectedAddOnInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnInfoToOrder, setSelectedAddOnPrices, setTotalAddOnPrice, setIsMeatItemModalOpen, confirmedOrdersInfo, listOfOrderTotals, orderTotal, setCartTotal, cartTotal, setSumQuantityTotalOfOrders, addOns])
+        // console.log(addOns)
+    }, [totalAddOnPrice, confirmedAddOnTotalPrice, selectedAddOnInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnInfoToOrder, setSelectedAddOnPrices, setTotalAddOnPrice, setIsMeatItemModalOpen, confirmedOrdersInfo, listOfOrderTotals, orderTotal, setCartTotal, cartTotal, setSumQuantityTotalOfOrders, addOns, confirmedAddOnsInfoInCart])
 
     return <div className="selected-food-modal">
         <div className="picture-container">
@@ -80,32 +105,28 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
         </div>
         {isAddOnMenuOpen ?
             <>
-                {/* <div className="add-ons-container"> */}
                 <div className="add-ons-text-container">
                     <h2>Add-On:</h2>
                     <div className="arrow-container">
                         <i class="fa fa-angle-down" aria-hidden="true" onClick={() => { setIsAddOnMenuOpen(!isAddOnMenuOpen) }}></i>
                     </div>
                 </div>
-                {/* </div> */}
                 <div className="add-ons-list-container">
                     {addOns.map((addOnItem) => {
                         return <AddOnItem
-                            addOnItem={addOnItem} mainMeatCount={mainMeatCount} setOrderTotal={setOrderTotal} meatItemInfoPrice={meatItemInfo.price}
-                            orderTotal={orderTotal}
+                            addOnItem={addOnItem} mainMeatCount={mainMeatCount} setOrderTotal={setOrderTotal} meatItemInfoPrice={meatItemInfo.price} confirmedAddOnsInfoInCart={confirmedAddOnsInfoInCart}
+
                         />
                     })}
                 </div>
             </>
             :
-            /* <div className="add-ons-container"> */
             <div className="add-ons-text-container">
                 <h2>Add-On:</h2>
                 <div className="arrow-container">
                     <i class="fa fa-angle-up" aria-hidden="true" onClick={() => { setIsAddOnMenuOpen(!isAddOnMenuOpen) }}></i>
                 </div>
             </div>
-            /* </div> */
         }
         <div className="quantity-and-add-to-cart-container">
             <div className="quantity-buttons-container">

@@ -11,9 +11,9 @@ const OrderMeatOrGoToResModal = () => {
     const [userWantsToOrderMeatFromSearchBar, setUserWantsToOrderMeatFromSearchBar] = isMeatItemModalOpenFromSearchBar;
     const [isSearchResultsContainerOpen, setIsSearchResultsContainerOpen] = openResultsContainer;
     const [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen] = isGoToResaurantMenuOrOrderMeatItemModalOpen;
-    useEffect(() => {
-        console.log("selectedMeatItemInfoFromSearchBar.restaurantInfo", selectedMeatItemInfoFromSearchBar.restaurantInfo.add_ons);
-    })
+    // useEffect(() => {
+    //     console.log("selectedMeatItemInfoFromSearchBar.restaurantInfo", selectedMeatItemInfoFromSearchBar.restaurantInfo.add_ons);
+    // })
     console.log("selectedMeatItemInfoFromSearchBar.meatItemInfo", selectedMeatItemInfoFromSearchBar.meatItemInfo);
     return <div className="isOrderThisItemOrGoToRestaurantModal-modal">
         <div className="isOrderThisItemOrGoToRestaurantModal-title">
