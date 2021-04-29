@@ -3,7 +3,7 @@ import { MeatInfoContext } from './MeatInfoProvider';
 import AddOnItem from './AddOnItem'
 
 const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addOns, setIsMeatItemModalOpen, orderFromCart, confirmedAddOnsInfoInCart }) => {
-    const { confirmedPriceTotal, confirmedQuantityOfOrder, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, listOfSelectedAddOnPrices, ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalPriceOfAddOn, isMeatItemModalOpenFromSearchBar, totalOfCart, ordersSumQuantityTotal, editCartOrder } = useContext(MeatInfoContext);
+    const { confirmedPriceTotal, confirmedQuantityOfOrder, confirmedNameOfRestaurantOfOrder, confirmedNameOfOrder, ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalPriceOfAddOn, isMeatItemModalOpenFromSearchBar, totalOfCart, ordersSumQuantityTotal, editCartOrder } = useContext(MeatInfoContext);
 
     const [makesEditsToCartOrder, setMakesEditsToCartOrder] = editCartOrder;
     const [userWantsToOrderMeatFromSearchBar, setUserWantsToOrderMeatFromSearchBar] = isMeatItemModalOpenFromSearchBar;
@@ -11,8 +11,8 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
     const [cartTotal, setCartTotal] = totalOfCart;
     const [totalAddOnPrice, setTotalAddOnPrice] = totalPriceOfAddOn
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = ordersInfoConfirmed;
-    const [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder] = infoOfSelectedAddOnsToOrder;
-    const [selectedAddOnPrices, setSelectedAddOnPrices] = listOfSelectedAddOnPrices;
+    const [selectedAddOnsInfoToOrder, setSelectedAddOnsInfoToOrder] = infoOfSelectedAddOnsToOrder;
+    // const [selectedAddOnPrices, setSelectedAddOnPrices] = listOfSelectedAddOnPrices;
     const [confirmedOrderPriceTotal, setConfirmedOrderPriceTotal] = confirmedPriceTotal;
 
     // const [confirmedCount, setConfirmedCount] = confirmedQuantityOfOrder;
@@ -28,6 +28,7 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
     const [listOfOrderTotals, setListOfOrderTotals] = useState([]);
 
 
+
     // increment will be the mainMeatCount
     const orderTotalChange = (increment) => {
         setMainMeatCount(increment);
@@ -35,8 +36,8 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
             setMainMeatCount(++mainMeatCount);
             return;
         }
-        let selectedAddOnPricesSum = selectedAddOnPrices.reduce((priceA, priceB) => priceA + priceB);
-        setOrderTotal(((selectedAddOnPricesSum * mainMeatCount) + (mainMeatCount * meatItemInfo.price)).toFixed(2))
+
+        setOrderTotal((mainMeatCount * (selectedAddOnsInfoToOrder.map((addOn) => addOn.price).reduce((priceN, priceNPlus1) => priceN + priceNPlus1) + meatItemInfo.price)).toFixed(2))
     }
 
     const confirmedOrder = () => {
@@ -44,11 +45,11 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
             id: Math.random().toString(16).slice(2).toString(),
             restaurantName: restaurantName,
             infoOfMainMeatItem: meatItemInfo,
-            selectedAddOnsInfo: selectedAddOnInfoToOrder,
+            selectedAddOnsInfo: selectedAddOnsInfoToOrder,
             allAddOns: addOns,
             orderQuantity: mainMeatCount,
             totalMeatPrice: (mainMeatCount * meatItemInfo.price).toFixed(2),
-            totalConfirmedAddOnPrice: selectedAddOnPrices.reduce((addOnA, addOnB) => addOnA + addOnB).toFixed(2),
+            totalConfirmedAddOnPrice: selectedAddOnsInfoToOrder.map((addOn) => addOn.price).reduce((priceN, priceNPlus1) => priceN + priceNPlus1) * mainMeatCount,
             totalOrderPrice: orderTotal
         }]);
         setWasOrderButtonPressed(true);
@@ -63,35 +64,27 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
                 setIsAddOnMenuOpen(true)
             }
         }
-        // if the length of the array in selectedAddOnInfo is greater than 0, then set isAddOnMenuOpen to true
         setMakesEditsToCartOrder(false)
     }, [makesEditsToCartOrder]);
 
-    // useEffect(() => {
-    //     if (orderFromCart.selectedAddOnsInfo.length > 0) {
-    //         setIsAddOnMenuOpen(true)
-    //     }
-    // }, [orderFromCart]);
-
-    // useEffect(() => {
-    //     console.log(selectedAddOnsInfo)
-    // }, [selectedAddOnsInfo]);
 
     useEffect(() => {
         // console.log(selectedAddOnsInfo);
         if (wasOrderButtonPressed) {
             setSumQuantityTotalOfOrders(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((priceN, priceNMinus1) => priceN + priceNMinus1));
             setCartTotal(confirmedOrdersInfo.map((order) => parseFloat(order.totalOrderPrice)).reduce((price1, priceN) => (price1 + priceN)));
-            setSelectedAddOnInfoToOrder([]);
-            setTotalAddOnPrice(0);
-            setSelectedAddOnPrices([0]);
+            setSelectedAddOnsInfoToOrder([{ name: null, price: 0 }]);
+            // console.log(selectedAddOnPrices);
             setWasOrderButtonPressed(false);
             setIsMeatItemModalOpen(false);
         }
         // setConfirmedAddOnTotalPrice(totalAddOnPrice);
         // setConfirmedAddOnsInfoToOrder(selectedAddOnInfoToOrder);
         // console.log(addOns)
-    }, [totalAddOnPrice, confirmedAddOnTotalPrice, selectedAddOnInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnInfoToOrder, setSelectedAddOnPrices, setTotalAddOnPrice, setIsMeatItemModalOpen, confirmedOrdersInfo, listOfOrderTotals, orderTotal, setCartTotal, cartTotal, setSumQuantityTotalOfOrders, addOns, confirmedAddOnsInfoInCart])
+    }, [totalAddOnPrice, confirmedAddOnTotalPrice, selectedAddOnsInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnsInfoToOrder, setTotalAddOnPrice, setIsMeatItemModalOpen, confirmedOrdersInfo, listOfOrderTotals, orderTotal, setCartTotal, cartTotal, setSumQuantityTotalOfOrders, addOns, confirmedAddOnsInfoInCart,])
+    useEffect(() => {
+        console.log("orderTotal", orderTotal);
+    }, [orderTotal])
 
     return <div className="selected-food-modal">
         <div className="picture-container">
@@ -146,7 +139,9 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
                         -
                     </div>
                 </div>
-                <div className="add-to-cart-button" onClick={confirmedOrder}>
+                <div className="add-to-cart-button" onClick={() => {
+                    confirmedOrder();
+                }}>
                     <div className="add-option-text">
                         <div>
                             Add

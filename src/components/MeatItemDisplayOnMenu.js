@@ -7,8 +7,9 @@ import 'font-awesome/css/font-awesome.min.css'
 
 
 const MeatItemDisplayOnMenu = ({ meatItemInfo, addOns, restaurantName, isMainMeatsMenuDisplayedOnDom, meatItemModalWasOpenedFromSearchContainer }) => {
-    const { listOfSelectedAddOnPrices } = useContext(MeatInfoContext);
-    const [selectedAddOnPrices, setSelectedAddOnPrices] = listOfSelectedAddOnPrices;
+    const { infoOfSelectedAddOnsToOrder } = useContext(MeatInfoContext);
+    const [selectedAddOnsInfoToOrder, setSelectedAddOnInfoToOrder] = infoOfSelectedAddOnsToOrder;
+
     const [isMeatItemModalOpen, setIsMeatItemModalOpen] = useState(false);
     const [orderTotal, setOrderTotal] = useState(meatItemInfo.price);
     let [mainMeatCount, setMainMetCount] = useState(1);
@@ -17,15 +18,19 @@ const MeatItemDisplayOnMenu = ({ meatItemInfo, addOns, restaurantName, isMainMea
         setMainMetCount(1);
         setOrderTotal(meatItemInfo.price);
         setIsMeatItemModalOpen(false);
-        setSelectedAddOnPrices([0]);
+        setSelectedAddOnInfoToOrder([{ name: null, price: 0 }]);
     }
 
     return isMeatItemModalOpen ? <>
         <div className="blocker" onClick={cancelOrder} />
         {isMainMeatsMenuDisplayedOnDom ? <div className="main-meats-menu-display">
             <div className="name-and-price-container">
-                <h4>{meatItemInfo.name}</h4>
-                <h6>${meatItemInfo.price}</h6>
+                <div className="meat-item-name-container">
+                    <h4>{meatItemInfo.name}</h4>
+                </div>
+                <div className="meat-item-price-container">
+                    <h6>${meatItemInfo.price}</h6>
+                </div>
             </div>
             <div className="main-meats-image">
                 {meatItemInfo.image}
