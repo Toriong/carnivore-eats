@@ -4,6 +4,7 @@ import Restaurants from './Restaurants';
 import NavBar from "./NavBar"
 import { MeatInfoProvider } from './MeatInfoProvider'
 import Footer from './Footer'
+import CheckoutPage from './CheckoutPage'
 
 const Pages = () => {
     return (
@@ -14,7 +15,12 @@ const Pages = () => {
                     <Route exact path="/">
                         <Restaurants />
                     </Route>
-                    <Route path="/menu/:storeName" children={<Menu />} />
+                    <Route exact path="/menu/:storeName">
+                        <Menu />
+                    </Route>
+                    <Route exact path="/checkoutPage">
+                        <CheckoutPage />
+                    </Route>
                 </Switch>
                 <Footer />
             </MeatInfoProvider>

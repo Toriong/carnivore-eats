@@ -257,7 +257,7 @@
   transform: translate(-50%, -50%);
 }
 
-#number-of-items {
+.number-of-items {
   position: absolute;
   top: 50%;
   left: 50%;

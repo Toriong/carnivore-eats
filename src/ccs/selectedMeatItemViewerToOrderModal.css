@@ -70,9 +70,14 @@
 }
 
 .quantity-and-add-to-cart-container {
-  position: relative;
+  float: left;
+  /* position: relative; */
+  width: 100%;
+  height: 150px;
   margin-right: 5px;
-  border: black solid 2px;
+  border: pink solid 2px;
+  /* display: grid;
+  place-items: center; */
 }
 
 /* add-on container */
@@ -89,12 +94,10 @@
 
 .add-ons-text-container h2 {
   float: left;
-  /* clear: left; */
 }
 
 .add-ons-text-container i {
   float: right;
-  /* clear: right; */
   margin-right: 30px;
   border: solid black 2px;
   width: 5%;
@@ -122,7 +125,7 @@
 }
 
 /* quantity-and-add-to-cart */
-.add-to-cart-button-quauntity-button-container {
+.add-to-cart-button-quantity-button-container {
   float: left;
   clear: left;
   width: 100%;
@@ -130,22 +133,46 @@
   border: solid green 2px;
 }
 
-.add-to-cart-button-quauntity-button-container div {
+.add-to-cart-button-quantity-button-container div {
   display: inline-block;
-  margin: 0px 5px 0px 5px;
+  margin: 10px 5px 0px 5px;
 }
 
 .add-to-cart-button {
-  /* height: 150px; */
   border: solid 2px black;
-  /* width: 100%; */
-  /* height: 170px; */
+  width: 50%;
+  height: 50px;
+}
+
+.update-order-button {
+  border: solid 2px black;
+  width: 50%;
+  height: 50px;
+}
+
+.add-option-text {
+  border: solid magenta 2px;
+  height: 50px;
+  width: 100%;
+  position: relative;
 }
 
 .add-option-text > div {
-  border: magenta solid 2px;
   display: inline-block;
-  margin: 0px 5px 0px 5px;
+  margin: 15px 5px 0px 5px;
+  border: solid 2px black;
+}
+
+.remove-item-container {
+  float: left;
+  width: 100%;
+  height: 100px;
+  display: grid;
+  place-items: center;
+}
+
+.update-button {
+  border: solid blue 2px;
 }
 
 .plus-sign,
