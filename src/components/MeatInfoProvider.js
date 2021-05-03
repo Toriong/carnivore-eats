@@ -5,7 +5,6 @@ export const MeatInfoContext = createContext();
 
 
 export const MeatInfoProvider = (props) => {
-    const [isLocalStorageEmpty, setIsLocalStorageEmpty] = useState(true);
     const [selectedRestaurants, setSelectedRestaurants] = useState('')
     const [confirmedOrderPriceTotal, setConfirmedOrderPriceTotal] = useState('');
     const [nameOfOrder, setNameOfOrder] = useState('');
@@ -30,7 +29,6 @@ export const MeatInfoProvider = (props) => {
         totalOrderPrice: 0
     }] : JSON.parse(localStorage.getItem("confirmed orders")));
     const [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder] = useState([{ name: null, price: 0 }]);
-    const [totalAddOnPrice, setTotalAddOnPrice] = useState(0);
     const [cartTotal, setCartTotal] = useState(confirmedOrdersInfo.map((order) => parseFloat(order.totalOrderPrice)).reduce((price1, priceN) => (price1 + priceN)));
     const [numberOfCartItems, setNumberOfCartItems] = useState(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((priceN, priceNMinus1) => priceN + priceNMinus1));
     const [makesEditsToCartOrder, setMakesEditsToCartOrder] = useState(false)
@@ -38,6 +36,12 @@ export const MeatInfoProvider = (props) => {
     const [isRemoveButtonOnDom, setIsRemoveButtonOnDom] = useState(false);
     const [isUpdateButtonOnDom, setIsUpdateButtonOnDom] = useState(false);
     const [isUserOnCheckoutPage, setIsUserOnCheckoutPage] = useState(false);
+    const [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen] = useState(false);
+    const [differentRestaurantNameOfNewOrder, setDifferentRestaurantNameOfNewOrder] = useState("");
+    const [allAddOnsForOrderOfDifferentRes, setAllAddOnsForOrderOfDifferentRes] = useState([{ name: null, price: 0 }]);
+    const [currentMeatCountForNewOrderOfDifferentRes, setCurrentMeatCountForNewOrderOfDifferentRes] = useState(1);
+    const [currentTotalPriceForNewOrderOfDifferentRes, setCurrentTotalPriceForNewOrderOfDifferentRes] = useState(0)
+    const [selectedMeatItemInfoForNewOrderOfDifferentRes, setSelectedMeatItemInfoForNewOrderOfDifferentRes] = useState("")
 
 
 
@@ -54,7 +58,6 @@ export const MeatInfoProvider = (props) => {
         isGoToResaurantMenuOrOrderMeatItemModalOpen: [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen],
         meatItemInfoSelectedFromSearchBar: [selectedMeatItemInfoFromSearchBar, setSelectedMeatItemInfoFromSeachBar],
         listOfSelectedAddOnPrices: [selectedAddOnPrices, setSelectedAddOnPrices],
-        totalPriceOfAddOn: [totalAddOnPrice, setTotalAddOnPrice],
         ordersInfoConfirmed: [confirmedOrdersInfo, setConfirmedOrdersInfo],
         infoOfSelectedAddOnsToOrder: [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder],
         totalOfCart: [cartTotal, setCartTotal],
@@ -63,7 +66,14 @@ export const MeatInfoProvider = (props) => {
         findSumOfConfirmedAddOnsOfCartOrder: [computeConfirmedAddOnsOfCartOrder, setComputeConfirmedAddOnsOfCartOrder],
         isButtonToRemoveOnDom: [isRemoveButtonOnDom, setIsRemoveButtonOnDom],
         putUpdateButtonOnDom: [isUpdateButtonOnDom, setIsUpdateButtonOnDom],
-        CheckoutPageUserIsOn: [isUserOnCheckoutPage, setIsUserOnCheckoutPage]
+        checkoutPageUserIsOn: [isUserOnCheckoutPage, setIsUserOnCheckoutPage],
+        openCreateNewCartModal: [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen],
+        newOrderDifferentRestaurantName: [differentRestaurantNameOfNewOrder, setDifferentRestaurantNameOfNewOrder],
+        addOnsAllOfDifferentRes: [allAddOnsForOrderOfDifferentRes, setAllAddOnsForOrderOfDifferentRes],
+        meatCountForNewOrderOfDifferentRes: [currentMeatCountForNewOrderOfDifferentRes, setCurrentMeatCountForNewOrderOfDifferentRes],
+        newCurrentOrderTotalPriceOfDifferentRes: [currentTotalPriceForNewOrderOfDifferentRes, setCurrentTotalPriceForNewOrderOfDifferentRes],
+        newOrderSelectedMeatItemInfoOfDifferentRes: [selectedMeatItemInfoForNewOrderOfDifferentRes, setSelectedMeatItemInfoForNewOrderOfDifferentRes]
+
     }}>
         {props.children}
     </MeatInfoContext.Provider>

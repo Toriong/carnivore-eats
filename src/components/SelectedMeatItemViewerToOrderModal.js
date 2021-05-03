@@ -3,16 +3,21 @@ import { MeatInfoContext } from './MeatInfoProvider';
 import AddOnItem from './AddOnItem'
 
 const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addOns, setIsMeatItemModalOpen, orderFromCart, confirmedAddOnsInfoInCart }) => {
-    const { ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalPriceOfAddOn, totalOfCart, cartItemsTotal, editCartOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom } = useContext(MeatInfoContext);
+    const { ordersInfoConfirmed, infoOfSelectedAddOnsToOrder, totalOfCart, cartItemsTotal, editCartOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom, openCreateNewCartModal, newOrderDifferentRestaurantName, addOnsAllOfDifferentRes, meatCountForNewOrderOfDifferentRes, newOrderSelectedMeatItemInfoOfDifferentRes, newCurrentOrderTotalPriceOfDifferentRes } = useContext(MeatInfoContext);
 
+    const [currentMeatCountForNewOrderOfDifferentRes, setCurrentMeatCountForNewOrderOfDifferentRes] = meatCountForNewOrderOfDifferentRes;
+    const [differentRestaurantNameOfNewOrder, setDifferentRestaurantNameOfNewOrder] = newOrderDifferentRestaurantName;
+    const [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen] = openCreateNewCartModal;
     const [isUpdateButtonOnDom, setIsUpdateButtonOnDom] = putUpdateButtonOnDom;
     const [isRemoveButtonOnDom, setIsRemoveButtonOnDom] = isButtonToRemoveOnDom
     const [makesEditsToCartOrder, setMakesEditsToCartOrder] = editCartOrder;
     const [numberOfCartItems, setNumberOfCartItems] = cartItemsTotal
     const [cartTotal, setCartTotal] = totalOfCart;
-    const [totalAddOnPrice, setTotalAddOnPrice] = totalPriceOfAddOn
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = ordersInfoConfirmed;
     const [selectedAddOnsInfoToOrder, setSelectedAddOnsInfoToOrder] = infoOfSelectedAddOnsToOrder;
+    const [allAddOnsForOrderOfDifferentRes, setAllAddOnsForOrderOfDifferentRes] = addOnsAllOfDifferentRes;
+    const [selectedMeatItemInfoForNewOrderOfDifferentRes, setSelectedMeatItemInfoForNewOrderOfDifferentRes] = newOrderSelectedMeatItemInfoOfDifferentRes
+    const [currentTotalPriceForNewOrderOfDifferentRes, setCurrentTotalPriceForNewOrderOfDifferentRes] = newCurrentOrderTotalPriceOfDifferentRes;
 
     let [mainMeatCount, setMainMeatCount] = useState(1);
     const [orderTotal, setOrderTotal] = useState(meatItemInfo.price);
@@ -68,7 +73,28 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
         console.log("updateOrder was executed")
     }
 
+    const newOrderCheck = () => {
+        if (confirmedOrdersInfo.length > 1) {
+            if (confirmedOrdersInfo.slice(1).every((order) => order.restaurantName === restaurantName) === false) {
+                return true;
+            } else if (confirmedOrdersInfo.slice(1).every((order) => order.restaurantName === restaurantName) === true) {
+                console.log('names do match')
+            }
+        }
+    }
+
     const confirmedOrder = () => {
+        if (newOrderCheck()) {
+            setIsCreateNewCartModalOpen(!isCreateNewCartModalOpen);
+            setDifferentRestaurantNameOfNewOrder(restaurantName);
+            setAllAddOnsForOrderOfDifferentRes(addOns);
+            setCurrentMeatCountForNewOrderOfDifferentRes(mainMeatCount);
+            setCurrentTotalPriceForNewOrderOfDifferentRes(orderTotal);
+            setSelectedMeatItemInfoForNewOrderOfDifferentRes(meatItemInfo);
+
+            setIsMeatItemModalOpen(false);
+            return;
+        };
         setConfirmedOrdersInfo([...confirmedOrdersInfo, {
             id: Math.random().toString(16).slice(2).toString(),
             restaurantName: restaurantName,
@@ -104,11 +130,14 @@ const SelectedMeatItemViewerToOrderModal = ({ meatItemInfo, restaurantName, addO
             setWasOrderButtonPressed(false);
             setIsMeatItemModalOpen(false);
         }
-    }, [totalAddOnPrice, confirmedAddOnTotalPrice, selectedAddOnsInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnsInfoToOrder, setTotalAddOnPrice, setIsMeatItemModalOpen, confirmedOrdersInfo, orderTotal, setCartTotal, cartTotal, setNumberOfCartItems, addOns, confirmedAddOnsInfoInCart]);
+    }, [confirmedAddOnTotalPrice, selectedAddOnsInfoToOrder, confirmedAddOnsInfoToOrder, wasOrderButtonPressed, setSelectedAddOnsInfoToOrder, setIsMeatItemModalOpen, confirmedOrdersInfo, orderTotal, setCartTotal, cartTotal, setNumberOfCartItems, addOns, confirmedAddOnsInfoInCart]);
 
     useEffect(() => {
         if (isCartPriceAndQuantityNeededToBeUpdate) {
+            // quantity of user's order
             setNumberOfCartItems(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((priceN, priceNMinus1) => priceN + priceNMinus1));
+
+            // total price of user's orders
             setCartTotal(confirmedOrdersInfo.map((order) => parseFloat(order.totalOrderPrice)).reduce((price1, priceN) => (price1 + priceN)));
             setSelectedAddOnsInfoToOrder([{ name: null, price: 0 }]);
             setIsCartPriceAndQuantityNeededToBeUpdate(!isCartPriceAndQuantityNeededToBeUpdate);

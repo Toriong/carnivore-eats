@@ -1,20 +1,21 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { MeatInfoContext } from './MeatInfoProvider';
+import CreateNewCartModal from './CreateNewCartModal';
 import SearchResults from './SearchResults';
 import OrderMeatOrGoToResModal from './OrderMeatOrGoToResModal';
 import SelectedMeatItemViewerToOrderModal from './SelectedMeatItemViewerToOrderModal'
-import { MeatInfoContext } from './MeatInfoProvider';
 import 'font-awesome/css/font-awesome.min.css'
-import { BrowserRouter } from 'react-router-dom';
+
 
 
 
 
 
 const NavBar = () => {
-    const { openResultsContainer, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar, ordersInfoConfirmed, totalOfCart, cartItemsTotal, editCartOrder, listOfSelectedAddOnPrices, findSumOfConfirmedAddOnsOfCartOrder, infoOfSelectedAddOnsToOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom } = useContext(MeatInfoContext);
+    const { openResultsContainer, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar, ordersInfoConfirmed, totalOfCart, cartItemsTotal, editCartOrder, listOfSelectedAddOnPrices, findSumOfConfirmedAddOnsOfCartOrder, infoOfSelectedAddOnsToOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom, openCreateNewCartModal } = useContext(MeatInfoContext);
 
-
+    const [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen] = openCreateNewCartModal;
     const [isUpdateButtonOnDom, setIsUpdateButtonOnDom] = putUpdateButtonOnDom
     const [isRemoveButtonOnDom, setIsRemoveButtonOnDom] = isButtonToRemoveOnDom;
     const [selectedAddOnsInfoToOrder, setSelectedAddOnsInfoToOrder] = infoOfSelectedAddOnsToOrder;
@@ -28,14 +29,18 @@ const NavBar = () => {
     const [isSearchResultsOpen, setIsSearchResultsOpen] = openResultsContainer;
     const [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen] = isGoToResaurantMenuOrOrderMeatItemModalOpen;
     const [selectedAddOnPrices, setSelectedAddOnPrices] = listOfSelectedAddOnPrices;
-
     const [isUserOnCheckoutPage, setIsUserOnCheckoutPage] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isSideNavBarOpen, setIsSideNavBarOpen] = useState(false);
     const [isMeatItemModalOpenFromCart, setIsMeatItemModalOpenFromCart] = useState(false);
     const [propsForMeatItemModalOpenFromCart, setPropsForMeatItemModalOpenFromCart] = useState('');
-
     const [searchInput, setSearchInput] = useState("");
+
+
+    const closeCreateNewCartModal = () => {
+        setIsCreateNewCartModalOpen(!isCreateNewCartModalOpen);
+        setSelectedAddOnsInfoToOrder([{ name: null, price: 0 }]);
+    }
 
     const openSearchResultsContainer = (event) => {
         setIsSearchResultsOpen(true);
@@ -65,11 +70,13 @@ const NavBar = () => {
         setIsUserOnCheckoutPage(false);
     }
 
+
+    // keeps sets the navBar to the its checkout verision when user is on the checkoutpages
     useEffect(() => {
-        console.log(confirmedOrdersInfo);
-        // console.log(cartTotal);
-        // console.log(numberOfCartItems);
-    })
+        if (window.location.pathname === '/checkoutPage') {
+            setIsUserOnCheckoutPage(true);
+        };
+    }, [isUserOnCheckoutPage]);
 
 
     return <>
@@ -290,6 +297,12 @@ const NavBar = () => {
             </>
             :
             null
+        }
+        {isCreateNewCartModalOpen &&
+            <>
+                <div className="blocker" onClick={closeCreateNewCartModal} />
+                <CreateNewCartModal />
+            </>
         }
 
     </>

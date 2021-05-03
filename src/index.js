@@ -9,6 +9,8 @@ import './ccs/menu.css'
 import './ccs/searchResults.css'
 import './ccs/footer.css'
 import 'font-awesome/css/font-awesome.min.css'
+import './ccs/createNewCartModal.css'
+import './ccs/checkoutPage.css'
 
 
 
