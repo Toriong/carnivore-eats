@@ -13,14 +13,14 @@ import 'font-awesome/css/font-awesome.min.css'
 
 
 const NavBar = () => {
-    const { openResultsContainer, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar, ordersInfoConfirmed, totalOfCart, cartItemsTotal, editCartOrder, listOfSelectedAddOnPrices, findSumOfConfirmedAddOnsOfCartOrder, infoOfSelectedAddOnsToOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom, openCreateNewCartModal } = useContext(MeatInfoContext);
+    const { openResultsContainer, isMeatItemModalOpenFromSearchBar, isGoToResaurantMenuOrOrderMeatItemModalOpen, meatItemInfoSelectedFromSearchBar, ordersInfoConfirmed, totalOfCart, cartItemsTotal, displayCartOrderInfoOnModal, listOfSelectedAddOnPrices, findSumOfConfirmedAddOnsOfCartOrder, infoOfSelectedAddOnsToOrder, isButtonToRemoveOnDom, putUpdateButtonOnDom, openCreateNewCartModal } = useContext(MeatInfoContext);
 
     const [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen] = openCreateNewCartModal;
     const [isUpdateButtonOnDom, setIsUpdateButtonOnDom] = putUpdateButtonOnDom
     const [isRemoveButtonOnDom, setIsRemoveButtonOnDom] = isButtonToRemoveOnDom;
     const [selectedAddOnsInfoToOrder, setSelectedAddOnsInfoToOrder] = infoOfSelectedAddOnsToOrder;
     const [computeConfirmedAddOnsOfCartOrder, setComputeConfirmedAddOnsOfCartOrder] = findSumOfConfirmedAddOnsOfCartOrder
-    const [makesEditsToCartOrder, setMakesEditsToCartOrder] = editCartOrder;
+    const [isCartOrderInfoDisplayedOnModoal, setIsCartOrderInfoDisplayedOnModoal] = displayCartOrderInfoOnModal;
     const [numberOfCartItems, setNumberOfCartItems] = cartItemsTotal;
     const [cartTotal, setCartTotal] = totalOfCart;
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = ordersInfoConfirmed;
@@ -57,7 +57,8 @@ const NavBar = () => {
             selectedOrderFromCart: orderInfo,
         });
         setIsMeatItemModalOpenFromCart(true);
-        setMakesEditsToCartOrder(true);
+        // this will set isCartOrderInfoDisplayedOnModal to true in the SelectedMeatItemViewerToOrderModal component in order to displayed the info from the selected cart order
+        setIsCartOrderInfoDisplayedOnModoal(true);
     };
 
     const closeCart = () => {
@@ -71,7 +72,7 @@ const NavBar = () => {
     }
 
 
-    // keeps sets the navBar to the its checkout verision when user is on the checkoutpages
+    //sets the navBar to the its checkout verision when user is on the checkoutpages
     useEffect(() => {
         if (window.location.pathname === '/checkoutPage') {
             setIsUserOnCheckoutPage(true);
@@ -137,9 +138,11 @@ const NavBar = () => {
                     </div>
                 </div>
                 {isUserOnCheckoutPage ?
-                    <div>
-                        <h1>Checkout</h1>
-                        <div className="number-of-items">
+                    <div className="checkout-and-quantity-container-display">
+                        <div>
+                            <h1>Checkout</h1>
+                        </div>
+                        <div>
                             {numberOfCartItems}
                         </div>
                     </div>
@@ -160,6 +163,8 @@ const NavBar = () => {
                                 <div id="search-icon-container">
                                     <i class="fa fa-search" aria-hidden="true"></i>
                                 </div>
+                                {/* search bar */}
+                                {/* using the search bar, the user is able to search for a specific type of meat, the exact name of a meat item, or restaurant */}
                                 <input type="text" className="search-input" value={searchInput} onChange={openSearchResultsContainer} />
                             </div>
                             {isSearchResultsOpen ?

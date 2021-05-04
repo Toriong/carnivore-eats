@@ -17,6 +17,10 @@ export const MeatInfoProvider = (props) => {
     const [isOrderMeatItemOrGoToRestaurantMenuModalOpen, setIsOrderMeatItemOrGoToRestaurantMenuModalOpen] = useState(false);
     const [selectedMeatItemInfoFromSearchBar, setSelectedMeatItemInfoFromSeachBar] = useState('');
     const [selectedAddOnPrices, setSelectedAddOnPrices] = useState([0]);
+
+    // this state value store all of the orders that the user selected of a restaurant
+    // will check if there's anything in the local storage
+    // if not, the default value will be a dummie object
     const [confirmedOrdersInfo, setConfirmedOrdersInfo] = useState(JSON.parse(localStorage.getItem("confirmed orders")) === null ? [{
         id: null,
         restaurantName: null,
@@ -29,12 +33,17 @@ export const MeatInfoProvider = (props) => {
         totalOrderPrice: 0
     }] : JSON.parse(localStorage.getItem("confirmed orders")));
     const [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder] = useState([{ name: null, price: 0 }]);
+    // find the price sum of the cart
     const [cartTotal, setCartTotal] = useState(confirmedOrdersInfo.map((order) => parseFloat(order.totalOrderPrice)).reduce((price1, priceN) => (price1 + priceN)));
-    const [numberOfCartItems, setNumberOfCartItems] = useState(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((priceN, priceNMinus1) => priceN + priceNMinus1));
-    const [makesEditsToCartOrder, setMakesEditsToCartOrder] = useState(false)
+    // the quantity sum of the cart
+    const [numberOfCartItems, setNumberOfCartItems] = useState(confirmedOrdersInfo.map((order) => order.orderQuantity).reduce((numN, numNMinus1) => numN + numNMinus1));
     const [computeConfirmedAddOnsOfCartOrder, setComputeConfirmedAddOnsOfCartOrder] = useState(false);
+
+    // the remove, update button, and makeEditsToCartOrder are context values because the determination of their values must be available in the NavBar component and the SelectedMeatItemViewerToOrderModal
     const [isRemoveButtonOnDom, setIsRemoveButtonOnDom] = useState(false);
     const [isUpdateButtonOnDom, setIsUpdateButtonOnDom] = useState(false);
+    const [isCartOrderInfoDisplayedOnModal, setIsCartOrderInfoDisplayedOnModal] = useState(false)
+
     const [isUserOnCheckoutPage, setIsUserOnCheckoutPage] = useState(false);
     const [isCreateNewCartModalOpen, setIsCreateNewCartModalOpen] = useState(false);
     const [differentRestaurantNameOfNewOrder, setDifferentRestaurantNameOfNewOrder] = useState("");
@@ -62,7 +71,7 @@ export const MeatInfoProvider = (props) => {
         infoOfSelectedAddOnsToOrder: [selectedAddOnInfoToOrder, setSelectedAddOnInfoToOrder],
         totalOfCart: [cartTotal, setCartTotal],
         cartItemsTotal: [numberOfCartItems, setNumberOfCartItems],
-        editCartOrder: [makesEditsToCartOrder, setMakesEditsToCartOrder],
+        displayCartOrderInfoOnModal: [isCartOrderInfoDisplayedOnModal, setIsCartOrderInfoDisplayedOnModal],
         findSumOfConfirmedAddOnsOfCartOrder: [computeConfirmedAddOnsOfCartOrder, setComputeConfirmedAddOnsOfCartOrder],
         isButtonToRemoveOnDom: [isRemoveButtonOnDom, setIsRemoveButtonOnDom],
         putUpdateButtonOnDom: [isUpdateButtonOnDom, setIsUpdateButtonOnDom],

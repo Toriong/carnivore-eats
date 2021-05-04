@@ -36,6 +36,7 @@
   width: 100px;
   position: relative;
   margin-right: 1px;
+  /* border: solid magenta 2px; */
 }
 
 .hamburger-menu-icon {
@@ -319,4 +320,12 @@
   z-index: -1000;
   /* visibility: hidden; */
   opacity: 0;
+}
+
+/* checkout version of the navBar */
+.checkout-and-quantity-container-display {
+  border: solid magenta 2px;
+  height: 100%;
+  width: 100px;
+  /* position: relative; */
 }
